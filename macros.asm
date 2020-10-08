@@ -40,6 +40,20 @@ GetText MACRO buffer
 	          RemoveData
 ENDM
 
+clearString MACRO buffer
+	            LOCAL      repeatClear
+	            SetData
+	            mov        si, 0
+	            mov        cx, 0
+	            mov        cx, SIZEOF buffer
+
+	repeatClear:
+	            mov        buffer[si], '$'
+	            inc        si
+	            LOOP       repeatClear
+	            RemoveData
+ENDM
+
 analyzer MACRO array
 	                LOCAL       Split, RepleaSplit, StringAnalizado, EndAnalisis, Minus
 	                SetData
@@ -78,6 +92,57 @@ analyzer MACRO array
 	                INC         si
 	EndAnalisis:    
 	                RemoveData
+ENDM
+
+compareString MACRO buffer, command, equal
+	              SetData
+	              mov        AX, DS
+	              mov        ES, AX
+	              mov        cx, 5
+
+	              lea        si, buffer
+	              lea        di, command
+	              repe       cmpsb
+	              RemoveData
+	              je         equal
+ENDM
+
+intToString MACRO number
+	            LOCAL      beginConv, EndConv
+	            SetData
+	            mov        AX, 0
+	            mov        bx, 0
+	            mov        cx, 0
+	            mov        bx, 10
+	            mov        si, 0
+
+	beginConv:  
+	            mov        CL, number[si]
+	            cmp        CL, 30h
+	            jl         EndConv
+	            cmp        CL, 39h
+	            jg         EndConv
+	            inc        si
+	            sub        cl, 30h
+	            mul        bx
+	            add        ax, cx
+	            JMP        beginConv
+	EndConv:    
+	            RemoveData
+ENDM
+
+getNumber MACRO buffer
+	          LOCAL      beginInt, endInt
+	          mov        si, 0
+	beginInt: 
+	          ReadKeyPad
+	          cmp        al, 0dh
+	          je         endInt
+	          mov        buffer[si], al
+	          inc        si
+	          JMP        beginInt
+	endInt:   
+	          mov        buffer[si], 00h
 ENDM
 
 SetData MACRO

@@ -54,23 +54,23 @@ writeFile MACRO array, handler, numBytes
 ENDM
 
 readFile MACRO array, handler, numBytes
-    MOV AH, 3fh
-    MOV BX, handler
-    MOV CX, numBytes
-    lea DX, array
-    int 21h
-    jc ErrorRead
+	         MOV AH, 3fh
+	         MOV BX, handler
+	         MOV CX, numBytes
+	         lea DX, array
+	         int 21h
+	         jc  ErrorRead
 ENDM
 
 closeFile MACRO handler
-    MOV AH, 3eh
-    mov handler, BX
-    int 21h
-    jc ErrorClose
+	          MOV AH, 3eh
+	          mov handler, BX
+	          int 21h
+	          jc  ErrorClose
 ENDM
 
 deleteFile MACRO buffer
-    MOV AH, 41h
-    lea DX, buffer
-    jc ErrorDelete
+	           MOV AH, 41h
+	           lea DX, buffer
+	           jc  ErrorDelete
 ENDM
