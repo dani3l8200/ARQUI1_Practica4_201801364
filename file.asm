@@ -15,14 +15,14 @@ GetPathFile MACRO array
 	            MOV        AL, 24h
 	            DEC        SI
 	            MOV        array[SI], AL
-	            JMP
+	            JMP        getCadena
 	endCadena:  
 	            MOV        array[SI], 00h
 ENDM
 
 openFile MACRO file, handler
 	         MOV AH, 3dh    	;abre el archivo
-	         MOV AL, 010B   	;Acceso lectura/escritura
+	         MOV AL, 10b   	;Acceso lectura/escritura
 	         lea DX, file   	;realiza una lectura con la informacion
 	         int 21h
 	         MOV handler, AX	;transfiere la informacion al handler
@@ -60,6 +60,7 @@ readFile MACRO array, handler, numBytes
 	         lea DX, array
 	         int 21h
 	         jc  ErrorRead
+			 print messageSuccessPath
 ENDM
 
 closeFile MACRO handler
