@@ -2,6 +2,7 @@ include macros.asm
 include file.asm
 include Time.asm
 include report.asm
+include analyzer.asm
 .model small
 
 .stack 100h
@@ -24,6 +25,8 @@ include report.asm
 	messageSuccessPath  db 0ah, 0dh, '  File read successfully :)',0ah,0dh, '$'
 
 	messageErrorPath    db 0ah, 0dh, '  Error Read File', '$'
+
+	newLine             db 0ah, 0dh, '$'
 
 	path                db 100 dup('$')
 
@@ -59,11 +62,15 @@ include report.asm
 
 	contentBufferJSON   db 50000 DUP('$')
 
-	temp                db 50 DUP('$')
+	temp                db 100 DUP('$')
 
-	operation1          db 00h, '$'
+	sigNumber           db 30h
 
-	operation2          db 00h, '$'
+	operation1          dw 00h, '$'
+
+	operation2          dw 00h, '$'
+
+	operationTest       dw 00h, '$'
 
 	sign                db 00h, '$'
 
@@ -93,13 +100,19 @@ include report.asm
 
 	maxResultJSON       db ',', 0ah, 0dh, 09h, 09h, 09h, '"Mayor": '
 
-	operationsJSON      db 0ah, 0dh, 09h, 09h, '},', 0ah, 0dh, 09h, 09h, '"'
+	operationsJSON      db 0ah, 09h, 09h, '},', 0ah, 09h, 09h, '"'
 
-	operations1JSON     db '": [', 0ah, 0dh, 09h, 09h, 09h, '{', 0ah, 0dh, 09h, 09h, 09h, 09h
+	operations1JSON     db '": ['
 
-	operations2JSON     db 0ah, 0dh, 09h, 09h, 09h, '},'
+	operations2JSON     db 0ah, 09h, 09h, 09h, '{', 0ah, 09h, 09h, 09h, 09h
 
-	endJSON             db 0ah, 0dh, 09h, 09h, ']', 0ah, 0dh, 09h, '}', 0ah, 0dh, '}'
+	doubleQuotes        db '"'
+
+	doubleDot           db ": "
+
+	operations3JSON     db 0ah, 09h, 09h, 09h, '},'
+
+	endJSON             db 0ah, 09h, 09h, ']', 0ah, 09h, '}', 0ah, '}'
 
 	dayDate             db 'dd'
 
@@ -127,13 +140,16 @@ include report.asm
 
 	parentNameSize      dw 0
 
-	number1             db 100 dup('$')
-	number2             db 100 dup('$')
-	resNumber           db 100 dup('$')
+	listNumbers         db 250 dup('$')
+	listValues          dw 250 dup('$')
+	listValues2         dw 250 dup('$')
+	resNumber           db 300 dup('$')
 
-	verifyPath          db 48
+	verifyPath          db 30h
+	counterNumbers      dw 0
+	counterValue        dw 0
 	
-	prueba1             dw 2 dup('$')
+	
 
 .code
 main PROC
@@ -159,6 +175,12 @@ main PROC
 	               clearString         pathFile
 	               clearString         contentBufferJSON
 
+	               clearString         temp
+	               clearString         listNumbers
+	               clearString         listValues2
+	               mov                 counterNumbers, 0
+	               mov                 counterValue, 0
+
 	               print               messageLoad
 	               print               messageInputPath
 	               GetPathFile         path
@@ -167,13 +189,12 @@ main PROC
 	               closeFile           handleFile
 				   
 	               simpleWhileAnalisis contentBufferJSON
-
+	              ; generateReport
 	               JMP                 MenuCalculator
 	BASH:          
 	               print               messageBash
 	               print               ReadingKeyboad
-	               GetPathFile         pathFile
-	               generateReport
+	              
 	               JMP                 MenuCalculator
 	EXIT:          
 	               MOV                 AH, 4ch
