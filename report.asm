@@ -94,7 +94,7 @@ generatePartOperations MACRO
 	While1:                
 	                       mov                dh, listNumbers[si]
 	                       mov                temp, dh
-	                       cmp                temp, '&'
+	                       cmp                temp, '^'
 	                       je                 endWhile1
 	                       inc                si
 	                       lengthString16BITS temp, parentNameSize
@@ -104,7 +104,7 @@ generatePartOperations MACRO
 	                       writeFile          doubleQuotes, handleFile, SIZEOF doubleQuotes
 	                       writeFile          doubleDot, handleFile, SIZEOF doubleDot
 
-	                       splitText          operationTest, listValues2[di]
+	                       splitText          operationTest, listValues[di]
 	                       lengthString32BITS operationTest, parentNameSize
 	                       writeFile          operationTest, handleFile, parentNameSize
 	                       clearString        operationTest

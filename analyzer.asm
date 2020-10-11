@@ -302,6 +302,11 @@ simpleWhileAnalisis MACRO buffer
 	                    mov         ax, 0
 	                    POP         ax
 
+						mov 		di, 0
+						mov 		si, 0
+						mov 		cx, 0
+
+						
 	                    clearString temp
 	                    mov         temp, ah
 	                    cmp         temp, '+'
@@ -312,6 +317,7 @@ simpleWhileAnalisis MACRO buffer
 	                    je          PRODUCT
 	                    cmp         temp, '/'
 	                    je          DIVISION
+
 	notOperations:      
 	                    clearString temp
 	                    mov         temp, ah
@@ -321,9 +327,9 @@ simpleWhileAnalisis MACRO buffer
 	                    PUSH        AX
 
 	                    PUSH        operation2
-						print temp
-						clearString temp
-						ReadKeyPad
+						;print temp
+						;clearString temp
+						;ReadKeyPad
 						
 	                    mov         [sigNumber], 30h
 
@@ -340,8 +346,8 @@ simpleWhileAnalisis MACRO buffer
 	                    inc         counterValue
 	                    inc         counterValue
 	                    RemoveData
-						splitText operation2, operation2
-						print operation2
+						;splitText operation2, operation2
+						;print operation2
 	                    clearString temp
 	                    mov         [sigNumber], 30h
 	                    inc         si

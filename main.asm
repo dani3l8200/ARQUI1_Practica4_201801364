@@ -76,7 +76,7 @@ include analyzer.asm
 
 	handleFile          dw ?
 
-	studentJSON         db '{', 0ah, 0dh, 09h, '"reporte": {', 0ah, 0dh, 09h, 09h, '"alumno": {', 0ah, 0dh, 09h, 09h, 09h, '"Nombre": "Juan Daniel Enrique Roman Barrientos",', 0ah, 0dh, 09h, 09h, 09h, 09h, '"Carnet": 201801364,', 0ah, 0dh, 09h, 09h, 09h, '"Seccion": "A",', 0ah, 0dh, 09h, 09h, 09h, '"Curso": "Arquitectura de Computadoras y Ensambladores 1"', 0ah, 0dh, 09h, 09h, '},'
+	studentJSON         db '{', 0ah, 0dh, 09h, '"reporte": {', 0ah, 0dh, 09h, 09h, '"alumno": {', 0ah, 0dh, 09h, 09h, 09h, '"Nombre": "Juan Daniel Enrique Roman Barrientos",', 0ah, 0dh, 09h, 09h, 09h, '"Carnet": 201801364,', 0ah, 0dh, 09h, 09h, 09h, '"Seccion": "A",', 0ah, 0dh, 09h, 09h, 09h, '"Curso": "Arquitectura de Computadoras y Ensambladores 1"', 0ah, 0dh, 09h, 09h, '},'
 
 	dayDateJSON         db 0ah, 0dh, 09h, 09h, '"Fecha": {', 0ah, 0dh, 09h, 09h, 09h, '"Dia": '
 
@@ -189,7 +189,7 @@ main PROC
 	               closeFile           handleFile
 				   
 	               simpleWhileAnalisis contentBufferJSON
-	              ; generateReport
+	               generateReport
 	               JMP                 MenuCalculator
 	BASH:          
 	               print               messageBash
