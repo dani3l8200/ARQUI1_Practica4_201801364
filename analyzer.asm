@@ -431,6 +431,9 @@ ENDM
 getMax MACRO
 	           LOCAL While, endWhile, notChanges
 	           mov   si, 0
+			   mov ax, 0 
+			   mov ax, listValues[si]
+			   mov maxAns, ax
 	While:     
 	           mov   ax, 0
 	           mov   ax, listValues[si]
