@@ -101,11 +101,11 @@ include analyzer.asm
 	hourDate            db 'hh'
 	minuteDate          db 'mm'
 	secondDate          db 'ss'
-	mediaAns            db '#'
-	medianaAns          db '#'
-	modaAns             db '#'
-	minAns              db '#'
-	maxAns              db '#'
+	mediaAns            dw 0,'$'
+	medianaAns          dw 0,'$'
+	modaAns             dw 0,'$'
+	minAns              dw 0,'$'
+	maxAns              dw 0,'$'
 	;**********************************************************************************************************************************
 	;**********************************************end content for report**************************************************************
 	
@@ -148,7 +148,11 @@ main PROC
 	;inicializa los contadores  en 0
 	               mov                 counterNumbers, 0
 	               mov                 counterValue, 0
-
+				   mov maxAns, 0
+				   mov mediaAns, 0
+				   mov minAns, 0
+				   mov modaAns, 0
+				   mov medianaAns, 0
 	;**************************para cargar el archivo***********************************************
 	               print               messageLoad
 	               print               messageInputPath
