@@ -13,6 +13,7 @@ ReadKeyPad MACRO
 	           int 21h    	;para el kernel de dos
 ENDM
 
+;macro para obtener el texto completo 
 GetText MACRO buffer
 	          LOCAL      getCadena, moveSpace, EndC
 	          SetData
@@ -40,6 +41,7 @@ GetText MACRO buffer
 	          RemoveData
 ENDM
 
+;macro para limpiar la cadena o variables utilizando
 clearString MACRO buffer
 	            LOCAL      repeatClear
 	            SetData
@@ -54,6 +56,7 @@ clearString MACRO buffer
 	            RemoveData
 ENDM
 
+;macro para convertir int a string 
 splitText MACRO array, seek
 	                LOCAL Split, RepleaSplit, StringAnalizado, EndAnalisis, Minus
 	                PUSH  SI
@@ -65,7 +68,7 @@ splitText MACRO array, seek
 	                MOV   DX, 0
 	                MOV   bx, 0ah
 	                MOV   ax, seek
-	                test  AX, 1000000000000000
+	                test  AX, 8000H
 	                jnz   Minus
 	                JMP   Split
 	Minus:          
@@ -97,7 +100,7 @@ splitText MACRO array, seek
 	                POP   CX
 	                POP   SI
 ENDM
-
+;macro para compara cadenas 
 compareString MACRO buffer, command, equal
 	              SetData
 	              mov        AX, DS
@@ -110,32 +113,33 @@ compareString MACRO buffer, command, equal
 	              RemoveData
 	              je         equal
 ENDM
-
+;macro para convertir un string (si se le puede llmar de esta manera) a un ascii (caracter)
 intToString MACRO number, output
 	            LOCAL      beginConv, EndConv
 	            SetData
 	            mov        AX, 0
 	            mov        bx, 0
 	            mov        cx, 0
-	            mov        bx, 10            	;este 10 sirve como tempiliar para unir los numeros a uno solo por centenas, decenas y unidades
+	            mov        bx, 10    ;este 10 sirve como tempiliar para unir los numeros a uno solo por unidades, decenas etc
 	            mov        si, 0
 
 	beginConv:  
-	            mov        CL, number[si]
-	            cmp        CL, 30h
-	            jl         EndConv
-	            cmp        CL, 39h
+	            mov        CL, number[si] ;mueve el valor del numero en la poscion SI al registro cl
+	            cmp        CL, 30h ;compara si ya termino de leer el string 
+	            jl         EndConv 
+	            cmp        CL, 39h ;compara si ya termino de leer el string 
 	            jg         EndConv
-	            inc        si
-	            sub        cl, 30h
-	            mul        bx
-	            add        ax, cx
-	            JMP        beginConv
+	            inc        si ;incrementa si
+	            sub        cl, 30h ;compara si ya termino de leer el string
+	            mul        bx ;realiza la multiplicacion para la conversion
+	            add        ax, cx ;suma ax y cx 
+	            JMP        beginConv ;se va a finalizar la conversion 
 	EndConv:    
-	            mov        output, ax
-	            RemoveData
+	            mov        output, ax ;mueve a salida el registro ax
+	            RemoveData ;libera la informacion en la pila 
 ENDM
 
+;macro para obtener un numero 
 getNumber MACRO buffer
 	          LOCAL      beginInt, endInt
 	          mov        si, 0
@@ -151,21 +155,21 @@ getNumber MACRO buffer
 ENDM
 
 
-
+;macro para almcenar informacion de los registros en la pila
 SetData MACRO
-	        PUSH AX
-	        PUSH BX
-	        PUSH CX
-	        PUSH DX
-	        PUSH SI
-	        PUSH DI
+	        PUSH AX ;almacena ax en la pila
+	        PUSH BX ;almacena bx en la pila
+	        PUSH CX ;almacena cx en la pila
+	        PUSH DX ;almacena dx en la pila
+	        PUSH SI ;almacena si en la pila
+	        PUSH DI ;almacena di en la pila
 ENDM
-
+;macro para liberar la informacion de los registro de la pila 
 RemoveData MACRO
-	           POP DI
-	           POP SI
-	           POP DX
-	           POP CX
-	           POP BX
-	           POP AX
+	           POP DI ;libera di de la pila
+	           POP SI ;libera si de la pila
+	           POP DX ;libera dx de la pila
+	           POP CX ;libera cx de la pila 
+	           POP BX ;libera bx de la pila
+	           POP AX ;libera ax de la pila 
 ENDM

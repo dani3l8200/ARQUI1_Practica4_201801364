@@ -11,38 +11,37 @@ simpleWhileAnalisis MACRO buffer
 	                    PUSH        ax
 	While:              
 	                    mov         dh, buffer[si]
-	                    cmp         dh, 22h                                                                                                	;aqui verificamos si vienen IDS, para guardarlos para el uso del a consola xd
+	                    cmp         dh, 22h  ;aqui verificamos si vienen IDS, para guardarlos para el uso del a consola xd
 	                    je          IDS
 	                    jmp         Continue
 	Continue:           
-	                    cmp         dh, '$'                                                                                                	;transfiere la direccion al registro data
+	                    cmp         dh, '$' ;transfiere la direccion al registro data
 	                    je          endW
-	                    inc         si                                                                                                     	;verifica si hay mas " para seguir guardando los ids, para las operaciones hijos xd
+	                    inc         si    ;verifica si hay mas " para seguir guardando los ids, para las operaciones hijos xd
 	                    jmp         While
 	IDS:                
 	                    inc         si
 	                    mov         dh, buffer[si]
-	                    cmp         dh, 22h                                                                                                	;ahora si verificamos si encuentra la " de cierre para guardar los IDS
+	                    cmp         dh, 22h  ;ahora si verificamos si encuentra la " de cierre para guardar los IDS
 	                    je          Whilecheck
 
-	                    cmp         dh, 23h                                                                                                	;esto es para las variables que declare en el main con # donde iran los resultados xd
+	                    cmp         dh, 23h  ;esto es para las variables que declare en el main con # donde iran los resultados xd
 	                    je          seachNumber
 
-	                    PUSH        SI                                                                                                     	;guardamos la posicion
+	                    PUSH        SI    ;guardamos la posicion
 	                    mov         si, 0
 	                    mov         si, cx
 	                    mov         temp[si], dh
-	                    inc         cx                                                                                                     	;incrementamos el contador para el registro del ciclo xd
+	                    inc         cx      ;incrementamos el contador para el registro del ciclo xd
 	                    POP         si
-
 	                    jmp         IDS
 	Whilecheck:         
 	                    mov         ax, 0
 	                    mov         cx, 0
-
+						;verifica si no existe un padre id, para salvarlo y si  existe continua 
 	                    cmp         [verifyPath], 30h
 	                    je          SaveFatherC
-
+						;aqui hace un pequeno analizador tipo case-insentive para add, div, mul, sub, id
 	                    cmp         temp[0], 'D'
 	                    je          div1
 	                    cmp         temp[0], 'd'
@@ -75,40 +74,37 @@ simpleWhileAnalisis MACRO buffer
 	                    je          id1
 	                    cmp         temp[0], 'I'
 	                    je          id1
-
+					;*********************************************************************************************************
 	                    jmp         SaveID
 
 	SaveID:             
 	                    SetData
 	                    mov         si, 0
-	                    mov         di, counterNumbers
+	                    mov         di, counterNumbers ;mueve la posicion actual del contador de ids para las operaciones
 	
 	WhileSI:            
-	                    mov         dh, temp[si]
-	                    cmp         dh, '$'
-	                    je          endWhileSI
+	                    mov         dh, temp[si] ;mueve el caracter que contiene temp en la pos si a dh 
+	                    cmp         dh, '$' ;compara si ya termino de leer la cadena 
+	                    je          endWhileSI ;termina el while 
 
-	                    mov         listNumbers[di], dh
-	                    inc         di
-	                    inc         si
+	                    mov         listNumbers[di], dh ;mueve el caracter del id a la lista de ids
+	                    inc         di ;incremetna di
+	                    inc         si ;incrementa si
 	                    jmp         WhileSI
 	endWhileSI:         
-	                    mov         listNumbers[di], '^'
-	                    inc         di
-	                    mov         counterNumbers, di
+	                    mov         listNumbers[di], '^' ;mueve el limitador de los ids
+	                    inc         di ;incrementa di 
+	                    mov         counterNumbers, di ;mueve di al contador de ids
 	                    
-						;print listNumbers
-						;ReadKeyPad
-	; print       counterValue
-	; ReadKeyPad
 		
-	                    RemoveData
-	                    clearString temp
-	;limpiamos la cadena para que si se analiza otro archivo no vuelve a tener en el buffer la misma informacion
+	                    RemoveData 
+	                    clearString temp ;limpiamos la cadena para que si se analiza otro archivo no vuelve a tener en el buffer la misma informacion
+	
 		
 	                    inc         si
 	                    jmp         While
 
+;aqui hace el analisis de las palabras div, add, sub, mul, id 
 	div0:               
 	                    mov         ax, 0
 	                    mov         ah, '/'
@@ -214,14 +210,22 @@ simpleWhileAnalisis MACRO buffer
 	                    cmp         temp[3], '$'
 	                    je          id0
 	                    jmp         SaveID
+	
+	
+	
+	
+	
+	
+	
+	;salva el padre id 
 	SaveFatherC:        
 	                    SetData
 	                    mov         si, 0
 	SaveWhile:          
 	                    mov         dh, temp[si]
-	                    cmp         dh, '$'                                                                                                	;verifica si ya es el fin de la cadena de datos a guardar
+	                    cmp         dh, '$'                 ;verifica si ya es el fin de la cadena de datos a guardar
 	                    je          endWSF
-	                    mov         pathFile[si], dh
+	                    mov         pathFile[si], dh   
 	            
 	                    mov         parentName[si], dh
 	           
@@ -238,13 +242,15 @@ simpleWhileAnalisis MACRO buffer
 	                    inc         si
 	                    mov         pathFile[si], 00h
 	                    mov         [verifyPath], 31h
-	;  print       pathFile
+
 	                    RemoveData
 	                    clearString temp
 	                    inc         si
 	                    jmp         While
 
-	seachNumber:        
+
+;
+    seachNumber:        
 	searchTrash:        
 	                    inc         si
 	                    mov         dh, buffer[si]
